@@ -8,4 +8,6 @@
 
 * La memoria se limpia en el método `dispose`
 
-* 
+* `FPSLogger` permite mostrar los FPS llamando a su método `log`
+
+* `OrtographicCamera` es la mejor en los juegos 2D donde no hay puntos de fuga
