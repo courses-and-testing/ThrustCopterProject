@@ -7,20 +7,59 @@ import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 
 public class ThrustCopter extends ApplicationAdapter {
+
 	SpriteBatch batch;
 	Texture background;
 	FPSLogger fpsLogger;
 	OrthographicCamera camera;
+	TextureRegion terrainBelow, terrainAbove;
+//	TextureRegion bgRegion;
+//	Sprite backgroundSprite;
+	float terrainOffset;
+
+	// Variables del avión
+	Animation plane;
+	float planeAnimTime;
+	Vector2 planeVelocity;
+	Vector2 planePosition;
+	Vector2 planeDefaultPosition;
+	Vector2 gravity;
+	private static final Vector2 damping = new Vector2(0.99f, 0.99f);
 	
 	@Override
 	public void create () {
+
 		batch = new SpriteBatch();
 		fpsLogger = new FPSLogger();
 		camera = new OrthographicCamera();
 		background = new Texture("background.png");
+		terrainBelow = new TextureRegion(new Texture("groundGrass.png"));
+		terrainAbove = new TextureRegion(terrainBelow);
+		terrainAbove.flip(true, true); //Le damos la vuelta a la de arriba
+//		bgRegion = new TextureRegion(background, 800, 480);
+//		backgroundSprite = new Sprite(background);
+//		backgroundSprite.setPosition(0, 0);
+		terrainOffset = 0;
+
+		// Animación del avión
+		plane = new Animation(0.05f, new TextureRegion(new Texture("planeRed1.png")), new TextureRegion(new Texture("planeRed2.png")));
+		plane.setPlayMode(Animation.PlayMode.LOOP);
+
+		// Movimiento del avión
+		planeVelocity = new Vector2();
+		planePosition = new Vector2();
+		planeDefaultPosition = new Vector2();
+		gravity = new Vector2();
+
+		resetScene();
+
 	}
 
 	@Override
@@ -45,6 +84,23 @@ public class ThrustCopter extends ApplicationAdapter {
 
 	public void updateScene(){
 
+		float deltaTime = Gdx.graphics.getDeltaTime();
+		terrainOffset -= 200*deltaTime;
+		planeAnimTime += deltaTime;
+
+		// Aplicamos gravedad al avión
+		planeVelocity.scl(damping);
+		planeVelocity.add(gravity);
+		planePosition.mulAdd(planeVelocity, deltaTime);
+		planePosition.x = planeDefaultPosition.x;
+
+		if (terrainOffset * -1 > terrainBelow.getRegionWidth()){
+			terrainOffset = 0;
+		}
+		if (terrainOffset > 0){
+			terrainOffset -= terrainBelow.getRegionWidth();
+		}
+
 	}
 
 	public void drawScene(){
@@ -55,8 +111,37 @@ public class ThrustCopter extends ApplicationAdapter {
 
 		//Dibujo
 		batch.begin();
+		batch.disableBlending();
 		batch.draw(background, 0, 0);
+//		backgroundSprite.draw(batch);
+		batch.enableBlending();
+
+		// Dibujamos el terreno de abajo
+		batch.draw(terrainBelow, terrainOffset, 0);
+		batch.draw(terrainBelow, terrainOffset + terrainBelow.getRegionWidth(), 0); //Movemos la textura
+
+		// Dibujamos el terreno de arriba
+		batch.draw(terrainAbove, terrainOffset, 480 - terrainAbove.getRegionHeight()); // Metemos la textura arriba
+		batch.draw(terrainAbove, terrainOffset + terrainAbove.getRegionWidth(), 480 - terrainAbove.getRegionHeight()); //Movemos la textura
+
+		// Dibujamos la animación del avión
+		batch.draw(plane.getKeyFrame(planeAnimTime), planePosition.x, planePosition.y);
+
 		batch.end();
+
+	}
+
+	/**
+	 * Método para reiniciar la escena
+	 */
+	private void resetScene(){
+
+		terrainOffset = 0;
+		planeAnimTime = 0;
+		planeVelocity.set(0, 0);
+		gravity.set(0, -2);
+		planeDefaultPosition.set(400 - 88/2, 240 - 73/2); // El avión mide 88 * 73
+		planePosition.set(planeDefaultPosition.x, planeDefaultPosition.y);
 
 	}
 }
