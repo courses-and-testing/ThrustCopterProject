@@ -1,0 +1,90 @@
+
+ThrustCopterAtlas.png
+size: 1024,1024
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+background
+  rotate: false
+  xy: 2, 399
+  size: 800, 480
+  orig: 800, 480
+  offset: 0, 0
+  index: -1
+fuel_pickup
+  rotate: false
+  xy: 264, 294
+  size: 19, 30
+  orig: 19, 30
+  offset: 0, 0
+  index: -1
+groundGrass
+  rotate: false
+  xy: 2, 326
+  size: 808, 71
+  orig: 808, 71
+  offset: 0, 0
+  index: -1
+life
+  rotate: false
+  xy: 148, 205
+  size: 114, 119
+  orig: 114, 119
+  offset: 0, 0
+  index: -1
+meteorBrown_tiny1
+  rotate: false
+  xy: 804, 665
+  size: 18, 18
+  orig: 18, 18
+  offset: 0, 0
+  index: -1
+meteorBrown_tiny2
+  rotate: false
+  xy: 148, 188
+  size: 16, 15
+  orig: 16, 15
+  offset: 0, 0
+  index: -1
+planeRed1
+  rotate: false
+  xy: 804, 685
+  size: 88, 73
+  orig: 88, 73
+  offset: 0, 0
+  index: -1
+planeRed2
+  rotate: false
+  xy: 2, 2
+  size: 88, 73
+  orig: 88, 73
+  offset: 0, 0
+  index: -1
+shield1
+  rotate: false
+  xy: 2, 77
+  size: 133, 108
+  orig: 133, 108
+  offset: 0, 0
+  index: -1
+shield2
+  rotate: false
+  xy: 804, 760
+  size: 143, 119
+  orig: 143, 119
+  offset: 0, 0
+  index: -1
+shield3
+  rotate: false
+  xy: 2, 187
+  size: 144, 137
+  orig: 144, 137
+  offset: 0, 0
+  index: -1
+star_pickup
+  rotate: false
+  xy: 949, 841
+  size: 39, 38
+  orig: 39, 38
+  offset: 0, 0
+  index: -1

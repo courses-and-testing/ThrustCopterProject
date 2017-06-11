@@ -10,16 +10,18 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
 public class ThrustCopter extends ApplicationAdapter {
 
 	SpriteBatch batch;
-	Texture background;
+	TextureRegion background;
 	FPSLogger fpsLogger;
 	OrthographicCamera camera;
 	TextureRegion terrainBelow, terrainAbove;
+	TextureAtlas atlas;
 //	TextureRegion bgRegion;
 //	Sprite backgroundSprite;
 	float terrainOffset;
@@ -39,8 +41,11 @@ public class ThrustCopter extends ApplicationAdapter {
 		batch = new SpriteBatch();
 		fpsLogger = new FPSLogger();
 		camera = new OrthographicCamera();
-		background = new Texture("background.png");
-		terrainBelow = new TextureRegion(new Texture("groundGrass.png"));
+		atlas = new TextureAtlas(Gdx.files.internal("thrustcopterassets.txt"));
+//		background = new Texture("background.png");
+		background = atlas.findRegion("background");
+//		terrainBelow = new TextureRegion(new Texture("groundGrass.png"));
+		terrainBelow = atlas.findRegion("groundGrass");
 		terrainAbove = new TextureRegion(terrainBelow);
 		terrainAbove.flip(true, true); //Le damos la vuelta a la de arriba
 //		bgRegion = new TextureRegion(background, 800, 480);
@@ -49,7 +54,12 @@ public class ThrustCopter extends ApplicationAdapter {
 		terrainOffset = 0;
 
 		// Animación del avión
-		plane = new Animation(0.05f, new TextureRegion(new Texture("planeRed1.png")), new TextureRegion(new Texture("planeRed2.png")));
+//		plane = new Animation(0.05f, new TextureRegion(new Texture("planeRed1.png")), new TextureRegion(new Texture("planeRed2.png")));
+		plane = new Animation(0.05f,
+				atlas.findRegion("planeRed1"),
+				atlas.findRegion("planeRed2"),
+				atlas.findRegion("planeRed3"),
+				atlas.findRegion("planeRed2"));
 		plane.setPlayMode(Animation.PlayMode.LOOP);
 
 		// Movimiento del avión
