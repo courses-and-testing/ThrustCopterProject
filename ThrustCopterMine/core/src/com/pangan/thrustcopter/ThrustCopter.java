@@ -13,6 +13,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class ThrustCopter extends ApplicationAdapter {
 
@@ -25,6 +27,7 @@ public class ThrustCopter extends ApplicationAdapter {
 //	TextureRegion bgRegion;
 //	Sprite backgroundSprite;
 	float terrainOffset;
+    Viewport viewport;
 
 	// Variables del avión
 	Animation plane;
@@ -41,6 +44,8 @@ public class ThrustCopter extends ApplicationAdapter {
 		batch = new SpriteBatch();
 		fpsLogger = new FPSLogger();
 		camera = new OrthographicCamera();
+        camera.position.set(400, 240, 0);
+        viewport = new FitViewport(800, 480, camera);
 		atlas = new TextureAtlas(Gdx.files.internal("thrustcopterassets.txt"));
 //		background = new Texture("background.png");
 		background = atlas.findRegion("background");
@@ -83,7 +88,7 @@ public class ThrustCopter extends ApplicationAdapter {
 		fpsLogger.log();
 
 		//Añado la cámara
-		camera.setToOrtho(false, 800, 480);
+		//camera.setToOrtho(false, 800, 480);
 
 		//Actualizo escena
 		updateScene();
@@ -154,4 +159,9 @@ public class ThrustCopter extends ApplicationAdapter {
 		planePosition.set(planeDefaultPosition.x, planeDefaultPosition.y);
 
 	}
+
+    @Override
+    public void resize(int width, int height) {
+        viewport.update(width, height);
+    }
 }

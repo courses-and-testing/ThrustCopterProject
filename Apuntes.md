@@ -37,3 +37,14 @@
 * `Animation.setPlayMode` para el modo de reproducción
 
 * Para las animaciones se necesita un `float` que lleve el tiempo de animación e irlo actualizando con `DeltaTime` y así poder obtener la `KeyFrame` en los momentos determinados
+
+### Handling multiple screen sizes and aspect ratios
+
+* *Viewports*
+
+  * `StrechViewport`: Estira el *viewport* para que quepa en la pantalla. Se puede escalar
+  * `FitViewport`: Pone barras negras para que quepa en la pantalla. No hay distorsión al poner el *viewport* en su tamaño
+  * `FillViewport`: Mantiene el ratio de la imagen pero y lo mete en la pantalla pero no crea barras. Por lo que puede cortar partes de la imagen
+  * `ScreenViewport`: Siempre del mismo tamaño de la pantalla, pero esto beneficia pantallas más grandes
+
+* Los *viewports* se tienen que actualizar en el método `resize`
