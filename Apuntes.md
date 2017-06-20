@@ -48,3 +48,11 @@
   * `ScreenViewport`: Siempre del mismo tamaño de la pantalla, pero esto beneficia pantallas más grandes
 
 * Los *viewports* se tienen que actualizar en el método `resize`
+
+## Chapter 3. Thou Shall Not Pass!
+
+### Navigating using touch input
+
+* `touchPosition.set(Gdx.input.getX(), Gdx.input.getY(), 0)` es un `Vector3` y sirve para conseguir la posición x e y del toque
+
+* `camera.unproject(Vector3)` para convertir las coordenadas de la pantalla en las de la cámara 

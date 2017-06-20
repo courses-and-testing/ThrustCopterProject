@@ -12,7 +12,9 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -28,6 +30,14 @@ public class ThrustCopter extends ApplicationAdapter {
 //	Sprite backgroundSprite;
 	float terrainOffset;
     Viewport viewport;
+
+	//Input
+	Vector3 touchPosition;
+	Vector2 tmpVector;
+	private static final int TOUCH_IMPULSE = 500;
+	TextureRegion tapIndicator;
+	float tapDrawTime;
+	private static final float TAP_DRAW_TIME_MAX = 1.0f;
 
 	// Variables del avión
 	Animation plane;
@@ -73,6 +83,11 @@ public class ThrustCopter extends ApplicationAdapter {
 		planeDefaultPosition = new Vector2();
 		gravity = new Vector2();
 
+		// Input
+		touchPosition = new Vector3();
+		tmpVector = new Vector2();
+		tapIndicator = atlas.findRegion("tap2");
+
 		resetScene();
 
 	}
@@ -116,6 +131,16 @@ public class ThrustCopter extends ApplicationAdapter {
 			terrainOffset -= terrainBelow.getRegionWidth();
 		}
 
+		if (Gdx.input.justTouched()){
+			touchPosition.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+			camera.unproject(touchPosition);
+			tmpVector.set(planePosition.x, planePosition.y);
+			tmpVector.sub(touchPosition.x, touchPosition.y).nor();
+			planeVelocity.mulAdd(tmpVector, TOUCH_IMPULSE - MathUtils.clamp(Vector2.dst(touchPosition.x, touchPosition.y, planePosition.x, planePosition.y), 0, TOUCH_IMPULSE));
+			tapDrawTime = TAP_DRAW_TIME_MAX;
+		}
+		tapDrawTime -= deltaTime;
+
 	}
 
 	public void drawScene(){
@@ -141,6 +166,11 @@ public class ThrustCopter extends ApplicationAdapter {
 
 		// Dibujamos la animación del avión
 		batch.draw(plane.getKeyFrame(planeAnimTime), planePosition.x, planePosition.y);
+
+		// input
+		if (tapDrawTime > 0){
+			batch.draw(tapIndicator, touchPosition.x-29.5f, touchPosition.y-29.5f);
+		}
 
 		batch.end();
 
