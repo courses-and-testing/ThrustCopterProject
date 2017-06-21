@@ -20,6 +20,10 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class ThrustCopter extends ApplicationAdapter {
 
+	static enum GameState {
+		INIT, ACTION, GAME_OVER
+	}
+
 	SpriteBatch batch;
 	TextureRegion background;
 	FPSLogger fpsLogger;
@@ -47,6 +51,11 @@ public class ThrustCopter extends ApplicationAdapter {
 	Vector2 planeDefaultPosition;
 	Vector2 gravity;
 	private static final Vector2 damping = new Vector2(0.99f, 0.99f);
+
+	// Estado del juego
+	GameState gameState;
+	TextureRegion tap1;
+//	TextureRegion gameOver;
 	
 	@Override
 	public void create () {
@@ -87,6 +96,11 @@ public class ThrustCopter extends ApplicationAdapter {
 		touchPosition = new Vector3();
 		tmpVector = new Vector2();
 		tapIndicator = atlas.findRegion("tap2");
+
+		// Estado del juego
+		gameState = GameState.INIT;
+		tap1 = atlas.findRegion("tap1");
+//		gameOver = atlas.findRegion("gameOver");
 
 		resetScene();
 
@@ -132,6 +146,16 @@ public class ThrustCopter extends ApplicationAdapter {
 		}
 
 		if (Gdx.input.justTouched()){
+
+			if (gameState == GameState.INIT){
+				gameState = gameState.ACTION;
+				return;
+			}
+			if (gameState == GameState.GAME_OVER){
+				gameState = GameState.INIT;
+				resetScene();
+				return;
+			}
 			touchPosition.set(Gdx.input.getX(), Gdx.input.getY(), 0);
 			camera.unproject(touchPosition);
 			tmpVector.set(planePosition.x, planePosition.y);
@@ -140,6 +164,12 @@ public class ThrustCopter extends ApplicationAdapter {
 			tapDrawTime = TAP_DRAW_TIME_MAX;
 		}
 		tapDrawTime -= deltaTime;
+
+		// Verificamos colisión del avión con el terreno
+		if (planePosition.y < terrainBelow.getRegionHeight() - 35 || planePosition.y + 73 > 480 - terrainBelow.getRegionHeight() + 35){
+			if (gameState != GameState.GAME_OVER)
+				gameState = GameState.GAME_OVER;
+		}
 
 	}
 
@@ -156,6 +186,11 @@ public class ThrustCopter extends ApplicationAdapter {
 //		backgroundSprite.draw(batch);
 		batch.enableBlending();
 
+		// Dibujamos el game over
+//		if (gameState == GameState.GAME_OVER){
+//			batch.draw(gameOver, 400-206, 240-80);
+//		}
+
 		// Dibujamos el terreno de abajo
 		batch.draw(terrainBelow, terrainOffset, 0);
 		batch.draw(terrainBelow, terrainOffset + terrainBelow.getRegionWidth(), 0); //Movemos la textura
@@ -163,6 +198,11 @@ public class ThrustCopter extends ApplicationAdapter {
 		// Dibujamos el terreno de arriba
 		batch.draw(terrainAbove, terrainOffset, 480 - terrainAbove.getRegionHeight()); // Metemos la textura arriba
 		batch.draw(terrainAbove, terrainOffset + terrainAbove.getRegionWidth(), 480 - terrainAbove.getRegionHeight()); //Movemos la textura
+
+		// Pantalla inicial
+		if (gameState == GameState.INIT){
+			batch.draw(tap1, planePosition.x, planePosition.y - 80);
+		}
 
 		// Dibujamos la animación del avión
 		batch.draw(plane.getKeyFrame(planeAnimTime), planePosition.x, planePosition.y);

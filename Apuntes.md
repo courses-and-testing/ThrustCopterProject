@@ -55,4 +55,4 @@
 
 * `touchPosition.set(Gdx.input.getX(), Gdx.input.getY(), 0)` es un `Vector3` y sirve para conseguir la posición x e y del toque
 
-* `camera.unproject(Vector3)` para convertir las coordenadas de la pantalla en las de la cámara 
+* `camera.unproject(Vector3)` para convertir las coordenadas de la pantalla en las de la cámara
