@@ -56,6 +56,9 @@ public class ThrustCopter extends ApplicationAdapter {
 	GameState gameState;
 	TextureRegion tap1;
 //	TextureRegion gameOver;
+
+	// Rocas
+	Vector2 scrollVelocity;
 	
 	@Override
 	public void create () {
@@ -102,6 +105,9 @@ public class ThrustCopter extends ApplicationAdapter {
 		tap1 = atlas.findRegion("tap1");
 //		gameOver = atlas.findRegion("gameOver");
 
+		// Rocas
+		scrollVelocity = new Vector2(4, 0);
+
 		resetScene();
 
 	}
@@ -135,6 +141,7 @@ public class ThrustCopter extends ApplicationAdapter {
 		// Aplicamos gravedad al avión
 		planeVelocity.scl(damping);
 		planeVelocity.add(gravity);
+		planeVelocity.add(scrollVelocity);
 		planePosition.mulAdd(planeVelocity, deltaTime);
 		planePosition.x = planeDefaultPosition.x;
 
